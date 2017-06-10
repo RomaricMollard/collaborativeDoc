@@ -19,3 +19,7 @@ To create a new file, just create a link in your start page and go on it (see th
 
 ## Demo
 http://romaricmourgues.com/demos/collaborativedoc/
+
+
+## Future improvements
+I will not continue this program because it fit my needs. Feel free to improve it, if you want to contribute to this repo you can.
