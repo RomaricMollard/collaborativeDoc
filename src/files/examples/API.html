@@ -1,0 +1,49 @@
+<!--TYPE=apidoc--><a onclick="changeFile('index.html')">Back</a><br>
+
+# Group 1
+
+Description of the first group of routes
+
+<!-- creating a route -->
+route: /click/this/box
+description:
+Click me ! My first super route and a very long description to describe it.
+controller: controller is in /src/controllers/test.php
+input: 
+{
+    "apikey": String
+    "pseudo": String
+}
+output:
+{
+    "errors": [
+        {
+            "id": INT
+            "name": String
+        }
+    ]
+}
+errors:
+Error 1, Error 2
+
+
+# Group 2
+
+Description of the second group of routes
+
+<!-- creating a route -->
+route: /ajax/nothing
+errors: none, none2
+
+<!-- creating a route -->
+route: /ajax/output/only
+output:
+{
+    "list": [
+        {
+            "name": String
+            "id"; INT
+        }
+    ]
+    "length": INT
+}

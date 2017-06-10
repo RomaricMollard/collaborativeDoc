@@ -1,0 +1,120 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Doc editor</title>
+	    <script
+			    src="https://code.jquery.com/jquery-3.2.1.min.js"
+			    integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+			    crossorigin="anonymous"></script>
+
+	    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+      
+        <script>
+		    var TogetherJSConfig_disableWebRTC = true;
+		    var TogetherJSConfig_inviteFromRoom = false;
+		    var TogetherJSConfig_dontShowClicks = true;
+		    var TogetherJSConfig_includeHashInUrl = false;
+		    var TogetherJSConfig_suppressJoinConfirmation = true;
+		    var TogetherJSConfig_suppressInvite = false;
+		    var TogetherJSConfig_ignoreMessages = ["cursor-update", "scroll-update"];
+		    sessionStorage.removeItem("togetherjs-session.status");
+	    </script>
+
+      
+	    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
+	    <script src="/public/index.js"></script>
+	    <script src="/public/ui-ace.js"></script>
+	    <script src="/public/ui-bootstrap-tpls-2.5.0.min.js"></script>
+
+	    <script src="https://togetherjs.com/togetherjs-min.js"></script>
+
+	    <style type="text/css" media="screen">
+		    .ace_editor {
+			    width: 100%;
+			    height: 100%;
+		    }
+            
+            .togetherjs-cursor-container {
+			    opacity: 0 !important;
+		    }
+		    .togetherjs-dock-right, #togetherjs-container  {
+			    opacity: 0 !important;
+		    }
+		    .bs-callout {
+			    padding: 10px;
+			    margin: 10px;
+			    border: 1px solid #eee;
+			    border-left-width: 5px;
+			    border-radius: 3px;
+		    }
+		    .bs-callout-info {
+			    border-left-color: #1b809e;
+		    }
+		    .bs-callout-controller {
+			    border-left-color: #9e0300;
+			    font-family: monospace;
+			    background: #EEE;
+		    }
+		    .badge.code {
+			    font-family: monospace;
+			    font-weight: normal;
+			    background: #EEE;
+			    color: #000;
+		    }
+	    </style>
+
+    </head>
+
+    <body ng-app="livedoc" ng-controller="editorCtrl as editor" style="background: #FFF !important;">
+
+	    <div  ng-show="!loading" style="display:flex; flex-direction: column;height: 100%; width: 100%; position: absolute; left: 0px; top: 0px;background: #FFF;">
+
+	        <div class="header" style="height: 80px">
+
+		        <div style="float: left; margin-top: 25px;margin-left: 20px;" class="btn-group" role="group" aria-label="...">
+			        <button ng-click="editor.changeView('edit')" ng-class="{'active': editor.pane=='edit'}" type="button" class="btn btn-default"><i class="glyphicon glyphicon-pencil"></i></button>
+			        <button ng-click="editor.changeView('both')" ng-class="{'active': editor.pane=='both'}" type="button" class="btn btn-default"><i class="glyphicon glyphicon-transfer"></i></button>
+			        <button ng-click="editor.changeView('view')" ng-class="{'active': editor.pane=='view'}" type="button" class="btn btn-default"><i class="glyphicon glyphicon-eye-open
+"></i></button>
+		        </div>
+
+		        <span style="cursor:pointer;line-height: 80px; height: 80px;color:#AAA;margin-left: 20px;" ng-click="editor.finder()">
+		            {{editor.route}}
+		        </span>
+
+		        <select class="btn btn-classic" ng-show="editor.pane!='view'" ng-model="editor.type" ng-change="editor.sourceChanged()">
+			        <option value="text">Text</option>
+			        <option value="html">HTML</option>
+			        <option value="apidoc">Api</option>
+			        <option value="markdown">Markdown</option>
+		        </select>
+
+		        <button style="float: right; margin-top: 22px;margin-right: 20px;" type="button" class="btn btn-warning" ng-show="editor.pane=='view'" ng-click="editor.loadHtml()"> Reload </button>
+		        <button style="float: right; margin-top: 22px;margin-right: 20px;" type="button" class="btn btn-default" ng-class="{'btn-success': editor.state=='saved'}" disabled ng-show="editor.pane!='view'"> {{editor.state}} </button>
+
+	        </div>
+
+	        <div style="flex:1;display: flex;overflow: hidden;">
+
+		        <div style="width: 100%;outline: none; border: none;" ng-show="editor.pane!='view'">
+			        <textarea ui-ace="{mode: 'markdown'}" ng-change="editor.sourceChanged()" ng-model="editor.source">
+
+			        </textarea>
+		        </div>
+
+		        <div ng-bind-html="editor.content" style="width: 100%;padding: 20px;padding-top: 0px;overflow: auto;overflow-x: hidden;" ng-show="editor.pane!='edit'" ng-controller="viewerCtrl as viewer">
+
+		        </div>
+
+	        </div>
+
+
+        </div>
+
+	    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.6/ace.js" type="text/javascript" charset="utf-8"></script>
+
+    </body>
+</html>

@@ -1,0 +1,12 @@
+<div ng-repeat="path in dir.paths">
+	<div ng-if="path.type=='file'">
+		{{editor}}
+		<a style="cursor: pointer;" ng-click="changeFile(path.realpath)">{{path.path}}</a>
+	</div>
+	<div ng-if="path.type=='dir'">
+		{{path.path}}
+		<div style="padding-left: 20px;">
+			<div ng-include="'directory.html'" ng-controller="directoryCtrl as dir" ng-init="dir.paths=path.content"></div>
+		</div>
+	</div>
+</div>
