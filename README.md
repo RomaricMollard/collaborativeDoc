@@ -18,4 +18,4 @@ Files are saved automaticly, you can choose editing pane, mixed pane or view pan
 To create a new file, just create a link in your start page and go on it (see the demo).
 
 ## Demo
-SOON
+http://romaricmourgues.com/demos/collaborativedoc/
